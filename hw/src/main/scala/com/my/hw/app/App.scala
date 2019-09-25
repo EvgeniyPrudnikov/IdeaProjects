@@ -136,18 +136,18 @@ object App {
       .groupBy((_, v) => (v.taskId, v))(groupedTask)
       .aggregate(Task.empty)(
         (_, newTks, aggTsk) => {
-        // check if this is a new task by timestamp
-        if (newTks.lastUpdateTs > aggTsk.lastUpdateTs)
-          Task(newTks.taskId, newTks.lastUpdateTs, aggTsk.confNumCnt + newTks.confNumCnt)
-        else aggTsk
-      }
+          // check if this is a new task by timestamp
+          if (newTks.lastUpdateTs > aggTsk.lastUpdateTs)
+            Task(newTks.taskId, newTks.lastUpdateTs, aggTsk.confNumCnt + newTks.confNumCnt)
+          else aggTsk
+        }
         , (_, _, aggTsk) => aggTsk
       )(materializedTask)
       .toStream
       .map((_, v) => (v.taskId, v.confNumCnt))
 
     // check the result:
-    outputStream.print(Printed.toSysOut[String, Int].withLabel("homework_result"))
+    // outputStream.print(Printed.toSysOut[String, Int].withLabel("homework_result"))
 
     // save the result to topic
     outputStream.to("homework_result")
@@ -165,7 +165,7 @@ object App {
     })
 
     try {
-      streams.cleanUp()
+      // streams.cleanUp()
       streams.start()
       latch.await()
     } catch {
